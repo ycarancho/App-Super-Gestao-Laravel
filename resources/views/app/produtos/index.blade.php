@@ -1,5 +1,5 @@
 @extends('app.layouts.basico')
-@section('titulo', 'Fornecedor')
+@section('titulo', 'Produto')
 @section('conteudo')
     <div class="conteudo-pagina">
         <div class="titulo-pagina-2">
@@ -7,7 +7,7 @@
         </div>
 
         <div class="menu" style="margin-bottom: 20px; border-bottom: 1px solid grey">
-            <li><a href="#">Novo</a></li>
+            <li><a href="{{route('produto.create')}}">Novo</a></li>
             <li><a href="#">Consulta</a></li>
         </div>
 

@@ -17,4 +17,8 @@ class Produto extends Model
 
         return $produto;
     }
+
+    public function adicionarProduto($data){
+        Produto::fill($data)->save();
+    }
 }

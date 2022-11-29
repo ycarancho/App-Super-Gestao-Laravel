@@ -3,14 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Produto;
+use App\Unidade;
 use Illuminate\Http\Request;
 
 class ProdutoController extends Controller
 {
     private $produto;
-    public function __construct(Produto $produto)
+    private $unidade;
+    public function __construct(Produto $produto, Unidade $unidade)
     {
         $this->produto = $produto;
+        $this->unidade = $unidade;
     }
     /**
      * Display a listing of the resource.
@@ -34,7 +37,8 @@ class ProdutoController extends Controller
      */
     public function create()
     {
-        //
+        $unidades = $this->unidade->listarUnidades();
+        return view('app.produtos.create', ['unidades'=>$unidades]);
     }
 
     /**
@@ -45,7 +49,14 @@ class ProdutoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            
+            $data = $request->all();
+            $this->produto->adicionarProduto($data);
+            return redirect(route('produto.index'));
+        } catch (\Exception $th) {
+            echo $th->getMessage();
+        }
     }
 
     /**
