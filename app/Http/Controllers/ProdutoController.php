@@ -49,8 +49,22 @@ class ProdutoController extends Controller
      */
     public function store(Request $request)
     {
-        try {
-            
+        $rules =[
+            'nome' => 'required|min:3|max:40',
+            'descricao' => 'required|min:3|max:300',
+            'peso' => 'required',
+            'unidade_id' => 'exists:unidades,id',
+        ];
+        $params = [
+            'required'=>'O campo :attribute é obrigatorio.',
+            'nome.min'=>'Minimo de 3 caractéres  para o campo :attribute.',
+            'nome.max'=>'Máximo de 40 caractéres atingidos para o campo :attribute.',
+            'descricao.min'=>'Minimo de 3 caractéres para o campo :attribute',
+            'descricao.max'=>'Máximo de 300 caractéres atingidos para o campo :attribute',
+            'unidade_id.exists' => 'Unidade não existe'
+        ];
+        $request->validate($rules, $params);
+        try {  
             $data = $request->all();
             $this->produto->adicionarProduto($data);
             return redirect(route('produto.index'));
@@ -67,7 +81,7 @@ class ProdutoController extends Controller
      */
     public function show(Produto $produto)
     {
-        //
+        return view('app.produtos.show', ['produto'=>$produto]);
     }
 
     /**
@@ -78,7 +92,8 @@ class ProdutoController extends Controller
      */
     public function edit(Produto $produto)
     {
-        //
+        $unidades = $this->unidade->listarUnidades();
+        return view('app.produtos.edit', ['produto'=>$produto, 'unidades'=>$unidades]);
     }
 
     /**
