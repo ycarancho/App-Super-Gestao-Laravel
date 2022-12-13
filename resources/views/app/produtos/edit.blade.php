@@ -14,8 +14,9 @@
         <div class="informacao-pagina">
             {{$msg ?? ''}}
             <div style="width:30%; margin-left:auto; margin-right:auto">
-                <form action="" method="POST">
+                <form action="{{route('produto.update', ['produto'=>$produto->id])}}" method="POST">
                     @csrf
+                    @method('PUT')
                     <input type="text" name="nome" value="{{$produto->nome ?? old('nome')}}" placeholder="Nome" class="borda-preta">
                     {{$errors->has('nome')? $errors->first('nome'): ''}}
                     <input type="text" name="descricao" value="{{$produto->descricao ?? old('descricao')}}" placeholder="Descrição"class="borda-preta">

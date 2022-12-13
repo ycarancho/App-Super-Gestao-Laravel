@@ -21,4 +21,7 @@ class Produto extends Model
     public function adicionarProduto($data){
         Produto::fill($data)->save();
     }
+
+    public function alterarProduto($data){
+    }
 }
