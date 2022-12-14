@@ -93,7 +93,7 @@ class ProdutoController extends Controller
     public function edit(Produto $produto)
     {
         $unidades = $this->unidade->listarUnidades();
-        return view('app.produtos.create', ['produto'=>$produto, 'unidades'=>$unidades]);
+        return view('app.produtos.edit', ['produto'=>$produto, 'unidades'=>$unidades]);
     }
 
     /**

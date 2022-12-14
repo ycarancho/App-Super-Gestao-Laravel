@@ -37,8 +37,10 @@ Route::middleware('autenticacao')->prefix('/app')->group(function () {
     Route::get('/home', 'HomeController@index')->name('app.home');
     Route::get('/cliente', 'ClienteController@index')->name('app.cliente');
 
-
+    //resource controller Produto
     Route::resource('produto', 'ProdutoController');
+    //resource controller ProdutoDetalhe
+    Route::resource('produto-detalhe', 'ProdutoDetalheController');
 
     Route::get('/sair','LoginController@sair')->name('app.sair');
 });
