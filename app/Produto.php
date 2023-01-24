@@ -10,10 +10,13 @@ class Produto extends Model
     protected $table = 'produto';
     protected $fillable = ['nome','descricao', 'peso', 'unidade_id'];
 
-
+    public function produtoDetalhe(){
+        return $this->hasOne('App\ProdutoDetalhe');
+    }
+    
     public function listarProduto()
     {
-        $produto = Produto::paginate(10);
+        $produto = Produto::with('produtoDetalhe')->paginate(10);
 
         return $produto;
     }
@@ -22,6 +25,5 @@ class Produto extends Model
         Produto::fill($data)->save();
     }
 
-    public function alterarProduto($data){
-    }
+
 }

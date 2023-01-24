@@ -71,19 +71,23 @@ class ProdutoDetalheController extends Controller
      */
     public function edit($id)
     {
-        //
+        $produto_detalhe = $this->produto_detalhe->buscarDetalhesPorID($id);
+        $unidades = $this->unidade->listarUnidades();
+        return view("app.produtoDetalhe.edit",['produto_detalhe'=>$produto_detalhe, 'unidades'=>$unidades]);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param App\ProdutoDetalhe $produtoDetalhe
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, ProdutoDetalhe $produtoDetalhe)
     {
-        //
+        $data = $request->all();
+        $this->produto_detalhe->updateProdutoDetalhe($request);
+        echo 'Produto atualizado';
     }
 
     /**

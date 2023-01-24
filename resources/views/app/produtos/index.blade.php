@@ -21,6 +21,9 @@
                             <th>Peso</th>
                             <th>Unidade ID</th>
                             <th>Vizualizar</th>
+                            <th>Comprimento</th>
+                            <th>Largura</th>
+                            <th>Altura</th>
                             <th>Excluir</th>
                             <th>Editar</th>
                         </tr>
@@ -33,6 +36,9 @@
                                 <td>{{$produto->peso}}</td>
                                 <td>{{$produto->unidade_id}}</td>
                                 <td><a href="{{route('produto.show', ['produto'=>$produto->id])}}">Vizualizar</a></td>
+                                <td>{{$produto->produtoDetalhe->comprimento ?? ''}}</td>
+                                <td>{{$produto->produtoDetalhe->largura ?? ''}}</td>
+                                <td>{{$produto->produtoDetalhe->altura ?? ''}}</td>
                                 <td>
                                     <form id="form_{{$produto->id}}" action="{{route('produto.destroy', ['produto'=>$produto->id])}}" method="POST">
                                         @csrf

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Produto;
+use App\ProdutoDetalhe;
 use App\Unidade;
 use Illuminate\Http\Request;
 
@@ -10,10 +11,12 @@ class ProdutoController extends Controller
 {
     private $produto;
     private $unidade;
-    public function __construct(Produto $produto, Unidade $unidade)
+    private $produtoDetalhe;
+    public function __construct(Produto $produto, Unidade $unidade, ProdutoDetalhe $produtoDetalhe)
     {
         $this->produto = $produto;
         $this->unidade = $unidade;
+        $this->produtoDetalhe = $produtoDetalhe;
     }
     /**
      * Display a listing of the resource.
