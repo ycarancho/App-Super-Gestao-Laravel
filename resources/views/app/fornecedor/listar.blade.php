@@ -7,8 +7,8 @@
         </div>
 
         <div class="menu" style="margin-bottom: 20px; border-bottom: 1px solid grey">
-            <li><a href="{{route('app.fornecedor.adicionar')}}">Novo</a></li>
-            <li><a href="{{route('app.fornecedor')}}">Consulta</a></li>
+            <li><a href="{{ route('app.fornecedor.adicionar') }}">Novo</a></li>
+            <li><a href="{{ route('app.fornecedor') }}">Consulta</a></li>
         </div>
 
         <div class="informacao-pagina">
@@ -25,21 +25,41 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($fornecedores as $fornecedor )
+                        @foreach ($fornecedores as $fornecedor)
                             <tr>
-                                <td>{{$fornecedor->nome}}</td>
-                                <td>{{$fornecedor->site}}</td>
-                                <td>{{$fornecedor->uf}}</td>
-                                <td>{{$fornecedor->email}}</td>
-                                <td><a href="{{route('app.fornecedor.excluir',$fornecedor->id )}}">Excluir</a></td>
-                                <td><a href="{{route('app.fornecedor.editar',$fornecedor->id )}}">Editar</a></td>
+                                <td>{{ $fornecedor->nome }}</td>
+                                <td>{{ $fornecedor->site }}</td>
+                                <td>{{ $fornecedor->uf }}</td>
+                                <td>{{ $fornecedor->email }}</td>
+                                <td><a href="{{ route('app.fornecedor.excluir', $fornecedor->id) }}">Excluir</a></td>
+                                <td><a href="{{ route('app.fornecedor.editar', $fornecedor->id) }}">Editar</a></td>
                             </tr>
+                            @if ($fornecedor->produtos != '[]')
+                            <tr>
+                                <td colspan="6">
+                                    <table border="1"  style="width:90%; margin-left:auto; margin-right:auto">
+                                        <thead>
+                                            <th>ID</th>
+                                            <th>NOME</th>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ( $fornecedor->produtos as $key => $produto )
+                                            <tr>
+                                                <td>{{$produto->id}}</td>
+                                                <td>{{$produto->nome}}</td>
+                                            </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                            @endif
                         @endforeach
                     </tbody>
                 </table>
-                {{$fornecedores->appends($request)->links()}}
+                {{ $fornecedores->appends($request)->links() }}
                 <br>
-                Exibindo {{$fornecedores->count()}} por pagina,  de {{$fornecedores->total()}} total
+                Exibindo {{ $fornecedores->count() }} por pagina, de {{ $fornecedores->total() }} total
             </div>
         </div>
     </div>

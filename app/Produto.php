@@ -16,7 +16,7 @@ class Produto extends Model
     
     public function listarProduto()
     {
-        $produto = Produto::with('produtoDetalhe')->paginate(10);
+        $produto = Produto::with('produtoDetalhe', 'fornecedor')->paginate(10);
 
         return $produto;
     }
@@ -25,5 +25,8 @@ class Produto extends Model
         Produto::fill($data)->save();
     }
 
+    public function fornecedor(){
+        return $this->belongsTo('App\fornecedor');
+    }
 
 }
