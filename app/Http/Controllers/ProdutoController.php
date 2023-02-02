@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Produto;
 use App\ProdutoDetalhe;
 use App\Unidade;
+use App\Fornecedor;
 use Illuminate\Http\Request;
 
 class ProdutoController extends Controller
@@ -12,11 +13,13 @@ class ProdutoController extends Controller
     private $produto;
     private $unidade;
     private $produtoDetalhe;
-    public function __construct(Produto $produto, Unidade $unidade, ProdutoDetalhe $produtoDetalhe)
+    private $fornecedores;
+    public function __construct(Produto $produto, Unidade $unidade, ProdutoDetalhe $produtoDetalhe, Fornecedor $fornecedores)
     {
         $this->produto = $produto;
         $this->unidade = $unidade;
         $this->produtoDetalhe = $produtoDetalhe;
+        $this->fornecedores = $fornecedores;
     }
     /**
      * Display a listing of the resource.
@@ -41,7 +44,8 @@ class ProdutoController extends Controller
     public function create()
     {
         $unidades = $this->unidade->listarUnidades();
-        return view('app.produtos.create', ['unidades'=>$unidades]);
+        $fornecedores = $this->fornecedores->fornecedores();
+        return view('app.produtos.create', ['unidades'=>$unidades, 'fornecedores'=>$fornecedores]);
     }
 
     /**
@@ -57,6 +61,7 @@ class ProdutoController extends Controller
             'descricao' => 'required|min:3|max:300',
             'peso' => 'required',
             'unidade_id' => 'exists:unidades,id',
+            'fornecedor_id' => 'exists:fornecedores,id',
         ];
         $params = [
             'required'=>'O campo :attribute é obrigatorio.',
@@ -64,7 +69,8 @@ class ProdutoController extends Controller
             'nome.max'=>'Máximo de 40 caractéres atingidos para o campo :attribute.',
             'descricao.min'=>'Minimo de 3 caractéres para o campo :attribute',
             'descricao.max'=>'Máximo de 300 caractéres atingidos para o campo :attribute',
-            'unidade_id.exists' => 'Unidade não existe'
+            'unidade_id.exists' => 'Unidade não existe',
+            'fornecedor_id.exists' => 'Fornecedor não existe'
         ];
         $request->validate($rules, $params);
         try {  
@@ -96,7 +102,8 @@ class ProdutoController extends Controller
     public function edit(Produto $produto)
     {
         $unidades = $this->unidade->listarUnidades();
-        return view('app.produtos.edit', ['produto'=>$produto, 'unidades'=>$unidades]);
+        $fornecedores = $this->fornecedores->fornecedores();
+        return view('app.produtos.edit', ['produto'=>$produto, 'unidades'=>$unidades, 'fornecedores'=>$fornecedores]);
     }
 
     /**
@@ -108,6 +115,24 @@ class ProdutoController extends Controller
      */
     public function update(Request $request, Produto $produto)
     {
+        $rules =[
+            'nome' => 'required|min:3|max:40',
+            'descricao' => 'required|min:3|max:300',
+            'peso' => 'required',
+            'unidade_id' => 'exists:unidades,id',
+            'fornecedor_id' => 'exists:fornecedores,id',
+        ];
+        $params = [
+            'required'=>'O campo :attribute é obrigatorio.',
+            'nome.min'=>'Minimo de 3 caractéres  para o campo :attribute.',
+            'nome.max'=>'Máximo de 40 caractéres atingidos para o campo :attribute.',
+            'descricao.min'=>'Minimo de 3 caractéres para o campo :attribute',
+            'descricao.max'=>'Máximo de 300 caractéres atingidos para o campo :attribute',
+            'unidade_id.exists' => 'Unidade não existe',
+            'fornecedor_id.exists' => 'Fornecedor não existe'
+        ];
+        $request->validate($rules, $params);
+        
         $produto->update($request->all());
         return view('app.produtos.show', ['produto'=>$produto]);
     }

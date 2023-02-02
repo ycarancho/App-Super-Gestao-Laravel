@@ -48,4 +48,8 @@ class Fornecedor extends Model
     public function excluir ($id){
        return Fornecedor::find($id)->delete();
     }
+
+    public function fornecedores(){
+        return Fornecedor::all();
+    }
 }
