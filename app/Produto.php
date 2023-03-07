@@ -25,8 +25,16 @@ class Produto extends Model
         Produto::fill($data)->save();
     }
 
+    public function listarTodosProdutos(){
+        return Produto::all();
+    }
+
     public function fornecedor(){
         return $this->belongsTo('App\fornecedor');
+    }
+
+    public function pedidos(){
+        return $this->belongsToMany('App\Pedido', 'pedidos_produtos', 'produto_id', 'pedidos_id');
     }
 
 }

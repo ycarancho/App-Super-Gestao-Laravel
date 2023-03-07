@@ -7,7 +7,7 @@
         </div>
 
         <div class="menu" style="margin-bottom: 20px; border-bottom: 1px solid grey">
-            <li><a href="{{route('produto.create')}}">Novo</a></li>
+            <li><a href="{{ route('produto.create') }}">Novo</a></li>
             <li><a href="#">Consulta</a></li>
         </div>
 
@@ -31,33 +31,45 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($produtos as $produto )
+                        @foreach ($produtos as $produto)
                             <tr>
-                                <td>{{$produto->nome}}</td>
-                                <td>{{$produto->descricao}}</td>
-                                <td>{{$produto->fornecedor->nome}}</td>
-                                <td>{{$produto->fornecedor->email}}</td>
-                                <td>{{$produto->peso}}</td>
-                                <td>{{$produto->unidade_id}}</td>
-                                <td><a href="{{route('produto.show', ['produto'=>$produto->id])}}">Vizualizar</a></td>
-                                <td>{{$produto->produtoDetalhe->comprimento ?? ''}}</td>
-                                <td>{{$produto->produtoDetalhe->largura ?? ''}}</td>
-                                <td>{{$produto->produtoDetalhe->altura ?? ''}}</td>
+                                <td>{{ $produto->nome }}</td>
+                                <td>{{ $produto->descricao }}</td>
+                                <td>{{ $produto->fornecedor->nome }}</td>
+                                <td>{{ $produto->fornecedor->email }}</td>
+                                <td>{{ $produto->peso }}</td>
+                                <td>{{ $produto->unidade_id }}</td>
+                                <td><a href="{{ route('produto.show', ['produto' => $produto->id]) }}">Vizualizar</a></td>
+                                <td>{{ $produto->produtoDetalhe->comprimento ?? '' }}</td>
+                                <td>{{ $produto->produtoDetalhe->largura ?? '' }}</td>
+                                <td>{{ $produto->produtoDetalhe->altura ?? '' }}</td>
                                 <td>
-                                    <form id="form_{{$produto->id}}" action="{{route('produto.destroy', ['produto'=>$produto->id])}}" method="POST">
+                                    <form id="form_{{ $produto->id }}"
+                                        action="{{ route('produto.destroy', ['produto' => $produto->id]) }}" method="POST">
                                         @csrf
                                         @method('DELETE')
-                                        <a href="#" onclick="document.getElementById('form_{{$produto->id}}').submit()">Excluir</a>
+                                        <a href="#"
+                                            onclick="document.getElementById('form_{{ $produto->id }}').submit()">Excluir</a>
                                     </form>
                                 </td>
-                                <td><a href="{{route('produto.edit', ['produto'=>$produto->id])}}">Editar</a></td>
+                                <td><a href="{{ route('produto.edit', ['produto' => $produto->id]) }}">Editar</a></td>
+                            </tr>
+                            <tr>
+                                <td colspan="12">
+                                    <p>Pedidos : </p>
+                                    @foreach ($produto->pedidos as $item)
+                                    <a href="{{route('pedido-produto.create', ['pedido'=>$item->id])}}">
+                                        Pedido : {{$item->id}}
+                                    </a>
+                                    @endforeach
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>
                 </table>
-                {{$produtos->appends($request)->links()}}
+                {{ $produtos->appends($request)->links() }}
                 <br>
-                Exibindo {{$produtos->count()}} por pagina,  de {{$produtos->total()}} total
+                Exibindo {{ $produtos->count() }} por pagina, de {{ $produtos->total() }} total
             </div>
         </div>
     </div>

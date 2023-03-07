@@ -3,35 +3,42 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Cliente;
-use PhpParser\Node\Stmt\Catch_;
+use App\Pedido;
+use App\Produto;
+use App\Pedido_Produto;
 
-class ClienteController extends Controller
+class Pedido_ProdutoController extends Controller
 {
-    private $cliente;
 
-    public function __construct(Cliente $cliente)
+    private $pedido;
+    private $produto;
+    private $Pedido_Produto;
+
+    public function __construct(Pedido $pedido, Produto $produto, Pedido_Produto $pedido_Produto)
     {
-        $this->cliente = $cliente;
+        $this->pedido = $pedido;
+        $this->produto = $produto;
+        $this->Pedido_Produto = $pedido_Produto;
     }
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index()
     {
-        $clientes = $this->cliente->getClientes();
-        return view('app.cliente.index', ['clientes'=>$clientes, 'request'=>$request->all()]);
+        //
     }
+
     /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Pedido $pedido)
     {
-        return view('app.cliente.create');
+        $produtos = $this->produto->listarTodosProdutos();
+        return view('app.pedido_produto.create', ['pedido'=>$pedido, 'produtos'=>$produtos]);
     }
 
     /**
@@ -40,28 +47,12 @@ class ClienteController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, Pedido $pedido)
     {
-        $rules =[
-            "nome"=>"required|min:3|max:40"
-        ];
-
-        $feedback =[
-            "required"=>"O campo :attribute é obrigatorio",
-            "nome.min"=>"O minimo de caracteres é 3",
-            "nome.max"=>"O maximo de caracteres é 40",
-        ];
-
-        $request->validate($rules,$feedback);
-
-        try{
-            $data = $request->all();
-            $this->cliente->salvarCliente($data);
-            return redirect()->route('cliente.index');
-        }catch(\Exception $ex){
-            echo $ex->getMessage();
-        }
-
+        $pedido_id = $pedido->id;
+        $produto_id = $request->get('produto_id');
+        $this->Pedido_Produto->salvarPedidoProduto($pedido_id, $produto_id);
+        return redirect()->route('pedido-produto.create', ['pedido'=>$pedido->id]);
     }
 
     /**

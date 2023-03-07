@@ -3,15 +3,18 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Pedido;
 use App\Cliente;
-use PhpParser\Node\Stmt\Catch_;
 
-class ClienteController extends Controller
+class PedidoController extends Controller
 {
+
+    private $pedido;
     private $cliente;
 
-    public function __construct(Cliente $cliente)
+    public function __construct(Pedido $pedido, Cliente $cliente)
     {
+        $this->pedido = $pedido;
         $this->cliente = $cliente;
     }
     /**
@@ -21,9 +24,10 @@ class ClienteController extends Controller
      */
     public function index(Request $request)
     {
-        $clientes = $this->cliente->getClientes();
-        return view('app.cliente.index', ['clientes'=>$clientes, 'request'=>$request->all()]);
+        $pedidos = $this->pedido->getPedidos();
+        return view('app.pedido.index', ['pedidos'=>$pedidos, 'request'=>$request->all()]);
     }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -31,7 +35,8 @@ class ClienteController extends Controller
      */
     public function create()
     {
-        return view('app.cliente.create');
+        $clientes = $this->cliente->getAllClientes();
+        return view('app.pedido.create', ['clientes'=>$clientes]);
     }
 
     /**
@@ -42,26 +47,18 @@ class ClienteController extends Controller
      */
     public function store(Request $request)
     {
-        $rules =[
-            "nome"=>"required|min:3|max:40"
+        $rules = [
+            "cliente_id"=>"exists:clientes,id"
+        ];
+        $params = [
+            "cliente_id.exists"=>"Cliente informado não existe"
         ];
 
-        $feedback =[
-            "required"=>"O campo :attribute é obrigatorio",
-            "nome.min"=>"O minimo de caracteres é 3",
-            "nome.max"=>"O maximo de caracteres é 40",
-        ];
+        $request->validate($rules,$params);
+        $cliente_id = $request->all();
+        $this->pedido->savePedido($cliente_id);
 
-        $request->validate($rules,$feedback);
-
-        try{
-            $data = $request->all();
-            $this->cliente->salvarCliente($data);
-            return redirect()->route('cliente.index');
-        }catch(\Exception $ex){
-            echo $ex->getMessage();
-        }
-
+        return redirect()->route('pedido.index');
     }
 
     /**
