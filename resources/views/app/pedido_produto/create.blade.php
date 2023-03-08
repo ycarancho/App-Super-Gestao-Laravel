@@ -19,6 +19,8 @@
                         <tr>
                             <th>ID</th>
                             <th>Nome do Produto</th>
+                            <th>Data de Inserção</th>
+                            <th>Excluir</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -26,6 +28,14 @@
                            <tr>
                                 <th>{{$itens->id}}</th>
                                 <th>{{$itens->nome}}</th>
+                                <th>{{$itens->pivot->created_at->format('d/m/Y')}}</th>
+                                <th>
+                                    <form id="form_{{$itens->pivot->id}}" method="post" action="{{route('pedido-produto.destroy', ['pedidoProduto'=>$itens->pivot->id,'pedido'=>$pedido->id])}}">
+                                        @method('DELETE')
+                                        @csrf
+                                        <a href="#" onclick="document.getElementById('form_{{$itens->pivot->id}}').submit()">Excluir</a>
+                                    </form>
+                                </th>
                            </tr>
                         @endforeach
                     </tbody>

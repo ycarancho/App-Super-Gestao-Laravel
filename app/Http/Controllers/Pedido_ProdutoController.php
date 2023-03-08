@@ -49,9 +49,21 @@ class Pedido_ProdutoController extends Controller
      */
     public function store(Request $request, Pedido $pedido)
     {
+        $rules = [
+            "produto_id"=>"exists:produto,id",
+            "quantidade"=>"required",
+        ];
+        $params=[
+            "produto_id.exists" => "O produto não existe",
+            "quantidade.required" => "O campo :attribute é obrigatorio"
+        ];
+
+        $request->validate($rules, $params);
         $pedido_id = $pedido->id;
         $produto_id = $request->get('produto_id');
-        $this->Pedido_Produto->salvarPedidoProduto($pedido_id, $produto_id);
+        $quantidade = $request->get('quantidade');
+        $pedido->produtos()->attach($produto_id, ['quantidade'=> $quantidade]);
+        // $this->Pedido_Produto->salvarPedidoProduto($pedido_id, $produto_id);
         return redirect()->route('pedido-produto.create', ['pedido'=>$pedido->id]);
     }
 
@@ -95,8 +107,17 @@ class Pedido_ProdutoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Pedido_Produto $pedidoProduto, $pedido)
     {
-        //
+     
+        /* Convencional*/
+        // Pedido_Produto::where([
+        //     'pedido'=>$pedido->id,
+        //     'produto'=>$produto->id
+        // ])->delete();
+
+        // $pedido->produtos()->detach($produto->id);
+        $pedidoProduto->delete();
+        return redirect()->route('pedido-produto.create', ['pedido'=>$pedido]);
     }
 }
